@@ -1,15 +1,22 @@
 <?php
+/* Include debug functions */
+require_once(__DIR__.'/functions.php');
 
-$params = require(__DIR__ . '/params.php');
+$params = require __DIR__ . '/params.php';
+$db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'd0b832744e361c30d02cd26300586d47',
+            'cookieValidationKey' => 'e78ad36bb79ce99ea13364d111958e74',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -37,7 +44,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
+        'db' => $db,
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
