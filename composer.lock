@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a973addecfa2040a73918abda938727c",
+    "content-hash": "6fa22624cb1d558038b5c4175df353de",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -32,7 +32,7 @@
             "version": "3.6.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
+                "url": "git@github.com:jquery/jquery-dist.git",
                 "reference": "e786e3d9707ffd9b0dd330ca135b66344dcef85a"
             },
             "dist": {
@@ -259,6 +259,48 @@
                 "random"
             ],
             "time": "2021-04-17T09:33:01+00:00"
+        },
+        {
+            "name": "ruskid/yii2-csv-importer",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ruskid/yii2-csv-importer.git",
+                "reference": "40adb0ded8ac078d4d19d7b56c855222fce6d6c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ruskid/yii2-csv-importer/zipball/40adb0ded8ac078d4d19d7b56c855222fce6d6c2",
+                "reference": "40adb0ded8ac078d4d19d7b56c855222fce6d6c2",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "ruskid\\csvimporter\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Victor Demin",
+                    "email": "demin@trabeja.com"
+                }
+            ],
+            "description": "Helper to import csv files into database",
+            "keywords": [
+                "csv",
+                "excel",
+                "importer",
+                "yii2"
+            ],
+            "time": "2018-04-27T09:04:46+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

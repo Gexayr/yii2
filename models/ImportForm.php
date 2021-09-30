@@ -19,6 +19,7 @@ class ImportForm extends ActiveRecord
     public $store_id;
     public $file;
     public $state;
+    public $not_loaded;
     /**
      * @var UploadedFile[]
      */
@@ -40,18 +41,24 @@ class ImportForm extends ActiveRecord
         return $this->hasMany(Products::class, ['import_id' => 'id']);
     }
 
-    public function getProductErrors()
+    public static function importProduct()
     {
+        $imports = ImportForm::find()
+            ->where('state', ImportForm::STATE_NEW)
+            ->asArray()
+            ->all();
 
-//        $fileHandler=fopen("upload.csv",'r');
-//        if($fileHandler){
-//            while($line=fgetcsv($fileHandler,1000)){
-//                $model = new CLASS_NAME;
-//                $model->image_url=$line[0];
-//                $model->save();
-//            }
-//        }
-        return $this->hasMany(Products::class, ['import_id' => 'id']);
+
+        foreach ($imports as $import) {
+            $importer = new CSVImporter;
+            $importer->setData(new CSVReader([
+                'filename' =>  $import['file'] . ".csv",
+                'fgetcsvOptions' => [
+                    'delimiter' => ';'
+                ]
+            ]));
+        }
+
     }
 
     /**

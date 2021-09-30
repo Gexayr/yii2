@@ -19,9 +19,11 @@ class SiteController extends Controller
     {
         $imports = ImportForm::find()
             ->with('store', 'products')
-            ->with('productErrors')
             ->asArray()
             ->all();
+
+
+//        ImportForm::importProduct();
 
 
         return $this->render('index', [

@@ -23,22 +23,20 @@ $this->title = 'My Yii Application';
                     <th>&#35;</th>
                     <th>State</th>
                     <th>Store Name</th>
-                    <th>Loaded count</th>
-                    <th>Errors count</th>
+                    <th>Loaded</th>
+                    <th>Not loaded</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php
                     foreach ($imports as $import) {
-
-                        d($import);
                 ?>
                 <tr>
                     <td><?=$import['id'];?></td>
                     <td><?=$import['state'];?></td>
                     <td><?=$import['store']['title'];?></td>
-                    <td><?=$import['id'];?></td>
-                    <td><?=$import['id'];?></td>
+                    <td><?=count($import['products']);?></td>
+                    <td><?=$import['not_loaded'] ? $import['not_loaded'] : '-';?></td>
                 </tr>
                 <?php
                     }
