@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php $form = ActiveForm::begin(['id' => 'import-form', 'options' => ['enctype' => 'multipart/form-data']]); ?>
 
                 <?php
-//                $store = \app\models\Store::find()->asArray()->all();
                 $stores = \app\models\Store::find()->select('title')->indexBy('id')->column();
                     echo $form->field($model, 'store_id')->dropdownList(
                         $stores,

@@ -32,10 +32,10 @@ $this->title = 'My Yii Application';
                     foreach ($imports as $import) {
                 ?>
                 <tr>
-                    <td><?=$import['id'];?></td>
-                    <td><?=$import['state'];?></td>
-                    <td><?=$import['store']['title'];?></td>
-                    <td><?=count($import['products']);?></td>
+                    <td><?=$import['id'] ? $import['id'] : '-' ;?></td>
+                    <td><?=$import['state'] ? $import['state'] : '-' ;?></td>
+                    <td><?=$import['store'] ? $import['store']['title'] : '-' ;?></td>
+                    <td><?=$import['loaded'] ? $import['loaded'] : '-' ;?></td>
                     <td><?=$import['not_loaded'] ? $import['not_loaded'] : '-';?></td>
                 </tr>
                 <?php

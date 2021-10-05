@@ -2,6 +2,9 @@
 
 namespace app\models;
 
+use ruskid\csvimporter\CSVImporter;
+use ruskid\csvimporter\CSVReader;
+use ruskid\csvimporter\MultipleImportStrategy;
 use Yii;
 use yii\base\Security;
 use yii\db\ActiveRecord;
@@ -19,6 +22,7 @@ class ImportForm extends ActiveRecord
     public $store_id;
     public $file;
     public $state;
+    public $loaded;
     public $not_loaded;
     /**
      * @var UploadedFile[]
@@ -41,22 +45,87 @@ class ImportForm extends ActiveRecord
         return $this->hasMany(Products::class, ['import_id' => 'id']);
     }
 
-    public static function importProduct()
+    public static function importProducts()
     {
         $imports = ImportForm::find()
             ->where('state', ImportForm::STATE_NEW)
             ->asArray()
             ->all();
 
-
         foreach ($imports as $import) {
-            $importer = new CSVImporter;
+            $importer = new CSVImporter();
+            $filename =  "uploads/" . $import['file'] . ".csv";
             $importer->setData(new CSVReader([
-                'filename' =>  $import['file'] . ".csv",
+                'filename' => $filename,
                 'fgetcsvOptions' => [
-                    'delimiter' => ';'
+                    'delimiter' => ','
                 ]
             ]));
+
+            $store_id = $import['store_id'];
+            $import_id = $import['id'];
+
+            Yii::$app->db->createCommand("UPDATE imports SET state=:state WHERE id=:id")
+                ->bindValue(':id', $import_id)
+                ->bindValue(':state', self::STATE_PROCESSING)
+                ->execute();
+
+            $numberRowsAffected = $importer->import(new MultipleImportStrategy([
+                'tableName' => Products::tableName(),
+                'configs' => [
+                    [
+                        'attribute' => 'upc',
+                        'value' => function($line) {
+                            return $line[0];
+                        },
+                        'unique' => true,
+                    ],
+                    [
+                        'attribute' => 'title',
+                        'value' => function($line) {
+                            return $line[1];
+                        },
+                    ],
+
+                    [
+                        'attribute' => 'price',
+                        'value' => function($line) {
+                            return $line[2];
+                        },
+                    ],
+                    [
+                        'attribute' => 'store_id',
+                        'value' => function($line) use ($store_id) {
+                            return $store_id;
+                        },
+                    ],
+                    [
+                        'attribute' => 'import_id',
+                        'value' => function($line) use ($import_id) {
+                            return $import_id;
+                        },
+                    ]
+                ],
+                'skipImport' => function($line){
+                    if($line[0] == ""){
+                        return true;
+                    }
+                }
+            ]));
+
+            $not_loaded = 0;
+            $line_count = count(file($filename));
+            if($line_count > 0) {
+                $not_loaded = $line_count - 1 - $numberRowsAffected;
+            }
+
+            Yii::$app->db->createCommand("UPDATE imports SET not_loaded=:not_loaded, loaded=:loaded, state=:state WHERE id=:id")
+                ->bindValue(':id', $import_id)
+                ->bindValue(':not_loaded', $not_loaded)
+                ->bindValue(':loaded', $numberRowsAffected)
+                ->bindValue(':state', self::STATE_DONE)
+                ->execute();
+
         }
 
     }

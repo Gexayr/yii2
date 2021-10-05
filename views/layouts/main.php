@@ -39,6 +39,7 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'Import', 'url' => ['/site/import']],
+            ['label' => 'Manual Load Products', 'url' => ['/site/set-import']],
         ],
     ]);
     NavBar::end();

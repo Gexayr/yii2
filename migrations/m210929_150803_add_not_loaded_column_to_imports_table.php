@@ -13,6 +13,7 @@ class m210929_150803_add_not_loaded_column_to_imports_table extends Migration
     public function safeUp()
     {
         $this->addColumn('imports', 'not_loaded', $this->integer());
+        $this->addColumn('imports', 'loaded', $this->integer());
     }
 
     /**
@@ -21,5 +22,6 @@ class m210929_150803_add_not_loaded_column_to_imports_table extends Migration
     public function safeDown()
     {
         $this->dropColumn('imports', 'not_loaded');
+        $this->dropColumn('imports', 'loaded');
     }
 }

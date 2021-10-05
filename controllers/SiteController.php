@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\WriteJob;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
@@ -18,13 +19,9 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $imports = ImportForm::find()
-            ->with('store', 'products')
+            ->with('store')
             ->asArray()
             ->all();
-
-
-//        ImportForm::importProduct();
-
 
         return $this->render('index', [
             'imports' => $imports,
@@ -43,6 +40,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->uploadedFiles = UploadedFile::getInstances($model, 'uploadedFiles');
             if ($model->upload()) {
+                Yii::$app->queue->push(new WriteJob());
                 Yii::$app->session->setFlash('success', "File imported successfully.");
                 return $this->goHome();
             }
@@ -50,5 +48,14 @@ class SiteController extends Controller
         return $this->render('import', [
             'model' => $model,
         ]);
+    }
+
+    public function actionSetImport()
+    {
+//        Yii::$app->queue->delay(10)->push(new WriteJob());
+
+        ImportForm::importProducts();
+        Yii::$app->session->setFlash('success', "Products imported successfully.");
+        return $this->goHome();
     }
 }
